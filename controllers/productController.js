@@ -34,10 +34,10 @@ exports.getProduct = async (req, res) => {
   try {
     const id = req.params.id;
     console.log(id);
-    const product = await Product.findById(req.params);
+    const product = await Product.findById(req.params.id);
     res.status(200).json({
       status: 'success',
-      data: products,
+      data: product,
     });
   } catch (err) {
     res.status(400).json({
@@ -48,12 +48,14 @@ exports.getProduct = async (req, res) => {
 };
 exports.updateProduct = async (req, res) => {
   try {
-    // console.log(req.params);
-
-    await Product.findByIdAndUpdate(req.params.id, req.body);
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
     res.status(200).json({
       status: 'success',
       message: 'Product Updated successfully!',
+      message: product,
     });
   } catch (err) {
     res.status(404).json({
@@ -64,7 +66,7 @@ exports.updateProduct = async (req, res) => {
 };
 exports.deleteProduct = async (req, res) => {
   try {
-    await Product.findByIdAndDelete(req.params);
+    await Product.findByIdAndDelete(req.params.id);
     res.status(200).json({
       status: 'success',
       message: 'Deleted successfully!',
